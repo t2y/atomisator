@@ -5,7 +5,7 @@ from sgmllib import SGMLParser
 import socket
 #import probstat
 import re
-import urllib2
+import urllib.request, urllib.error
 import string
 
 from BeautifulSoup import BeautifulSoup, Comment
@@ -70,7 +70,7 @@ class _Follower(object):
             sample = TXT_HTML.sub(r'<br/>', sample.strip())
             extract = EXTRACT % sample
             entry['summary'] = (extract.decode(encoding, 'ignore') + 
-                                entry.get('summary', u'') +
+                                entry.get('summary', '') +
                                 self._marker)
         return entry
  
@@ -198,8 +198,8 @@ class _Follower(object):
         """
         charset = 'utf-8'
         try:
-            page = urllib2.urlopen(link)
-            if 'content-type' in page.headers.keys():
+            page = urllib.request.urlopen(link)
+            if 'content-type' in list(page.headers.keys()):
                 content_type = page.headers['content-type'].split(';')
                 type_ = content_type[0].strip().lower()
                 if type_ not in ('text/html', 'text/plain', 'test/rst'):
@@ -208,7 +208,7 @@ class _Follower(object):
                     charset = content_type[1].split('=')[-1]
             content = page.read()
 
-        except (urllib2.HTTPError, urllib2.URLError, socket.timeout):
+        except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout):
             return None, None
         body = self._clean(content)
         title = title.encode(charset, 'ignore')

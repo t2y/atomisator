@@ -7,7 +7,7 @@ import os
 from os.path import dirname
 import sys
 from os.path import join
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 import re
 import logging
 

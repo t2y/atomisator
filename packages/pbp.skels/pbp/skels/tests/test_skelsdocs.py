@@ -52,22 +52,22 @@ def read_sh(cmd):
 
 def sh(cmd):
     _cmd = cmd
-    print cmd
+    print(cmd)
     # launch command 2 times to see what append and be able 
     # to test in doc tests
     os.system(_cmd)
     child_stdout_and_stderr, child_stdin = popen2.popen4(_cmd)
     child_stdin.close()
-    print child_stdout_and_stderr.read()
+    print(child_stdout_and_stderr.read())
 
 def ls(*args):
     dirname = os.path.join(*args)
     if os.path.isdir(dirname):
         filenames = os.listdir(dirname)
         for filename in sorted(filenames):
-            print filename
+            print(filename)
     else:
-        print 'No directory named %s' % dirname
+        print('No directory named %s' % dirname)
 
 def cd(*args):
     dirname = os.path.join(*args)
@@ -79,9 +79,9 @@ def config(filename):
 def cat(*args):
     filename = os.path.join(*args)
     if os.path.isfile(filename):
-        print open(filename).read()
+        print(open(filename).read())
     else:
-        print 'No file named %s' % filename
+        print('No file named %s' % filename)
 
 def touch(*args, **kwargs):
     filename = os.path.join(*args)

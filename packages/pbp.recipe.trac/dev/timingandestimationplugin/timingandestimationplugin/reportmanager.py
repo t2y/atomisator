@@ -53,7 +53,7 @@ class CustomReportManager:
       db.commit()
       db.close()
     
-    except Exception, e:
+    except Exception as e:
       self.log.error("CustomReportManager Exception: %s" % (e,));
       db.rollback()
 
@@ -113,7 +113,7 @@ class CustomReportManager:
         self._update_report(id, title, author, description, query,
                             maingroup, subgroup, version)
         return True
-    except Exception, e:
+    except Exception as e:
       self.log.error("CustomReportManager.add_report Exception: %s, %s" % (e,(title, author, uuid, version,
                  maingroup, subgroup, force)));
     self.log.debug("report %s not upgraded (a better version already exists)" % uuid)
@@ -137,7 +137,7 @@ class CustomReportManager:
                      "WHERE custom_report.maingroup=%s "
                      "ORDER BY custom_report.subgroup,custom_report.ordering", (group,))
       for subgroup, id, title, version, uuid in cursor:
-        if not rv.has_key(subgroup):
+        if subgroup not in rv:
           rv[subgroup] = { "title": subgroup,
                            "reports": [] }
         rv[subgroup]["reports"].append( { "id": int(id), "title": title, "version":version, "uuid":uuid } )
@@ -156,7 +156,7 @@ class CustomReportManager:
       cur.execute(sql, params)
       data = cur.fetchone();
       db.commit();
-    except Exception, e:
+    except Exception as e:
       self.log.error('There was a problem executing sql:%s \n \
       with parameters:%s\nException:%s'%(sql, params, e));
       db.rollback()
@@ -182,7 +182,7 @@ class CustomReportManager:
       for sql, params in args:
         cur.execute(sql, params)
       db.commit()
-    except Exception, e:
+    except Exception as e:
       self.log.error('There was a problem executing sql:%s \n \
       with parameters:%s\nException:%s'%(sql, params, e));
       db.rollback();

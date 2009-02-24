@@ -16,8 +16,8 @@ def collectResultsFromAllTracs( sql ):
     for proj in projects:
         try:
             lst.extend([( proj , getResultSet( proj, sql ))])
-        except Exception, e:
-            print "collectResultsFromAllTracs: sql failed to execute on %s : %s " % (proj, e.args)
+        except Exception as e:
+            print("collectResultsFromAllTracs: sql failed to execute on %s : %s " % (proj, e.args))
             
     return lst
 
@@ -26,7 +26,7 @@ def executeAgainstAllTracs( sql ):
         try:
             executeNonQuery( proj, sql )
         except:
-            print "executeAgainstAllTracs: sql failed to execute on %s" % proj
+            print("executeAgainstAllTracs: sql failed to execute on %s" % proj)
     
 
 def executeNonQuery(proj, sql, *params):
@@ -87,7 +87,8 @@ def _columnName( columnDescription ):
 
 class ResultSet:
     """ the result of calling getResultSet """
-    def __init__ (self, (columnDescription, rows)):
+    def __init__ (self, xxx_todo_changeme):
+        (columnDescription, rows) = xxx_todo_changeme
         self.columnDescription, self.rows = columnDescription, rows
         self.columnNames = [_columnName(_) for _ in self.columnDescription]
         self.columnMap = self.getColumnMap()
@@ -113,16 +114,16 @@ class ResultSet:
             elif(trow == int):
                 return self.rows[row][self.columnMap[col]]
             else:
-                print ("rs.value Type Failed col:%s  row:%s" % (type(col), type(row)))
+                print(("rs.value Type Failed col:%s  row:%s" % (type(col), type(row))))
         elif tcol == int:
             if(trow == list or trow == tuple):
                 return row[col]
             elif(trow == int):
                 return self.rows[row][col]
             else:
-                print ("rs.value Type Failed col:%s  row:%s" % (type(col), type(row)))
+                print(("rs.value Type Failed col:%s  row:%s" % (type(col), type(row))))
         else:
-            print ("rs.value Type Failed col:%s  row:%s" % (type(col), type(row)))
+            print(("rs.value Type Failed col:%s  row:%s" % (type(col), type(row))))
             
 
 

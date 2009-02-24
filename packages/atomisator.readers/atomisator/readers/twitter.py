@@ -1,5 +1,5 @@
 import os
-import urllib2
+import urllib.request, urllib.error
 from os.path import join
 
 from atomisator.parser import Parser

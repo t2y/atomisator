@@ -206,7 +206,7 @@ class DataProcessor(object):
             for result in results:
                 enhancer = result.get()
                 enhancer_type = type(enhancer)
-                for name, ob in ENHANCERS.items():
+                for name, ob in list(ENHANCERS.items()):
                     if type(ob) == enhancer_type:
                         ENHANCERS[name] = enhancer
 

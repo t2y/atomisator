@@ -1,4 +1,4 @@
-import dbhelper
+from . import dbhelper
 from trac.ticket.default_workflow import get_workflow_config
 from sets import Set
 
@@ -17,8 +17,8 @@ def get_statuses(config, env):
 def get_statuses_from_workflow(config):
     wf = get_workflow_config(config)
     x = Set()
-    for key, value in wf.items():
+    for key, value in list(wf.items()):
         x.add(value['newstate'])
         x |= Set(value['oldstates'])
-    x.difference_update([u'*'])
+    x.difference_update(['*'])
     return x

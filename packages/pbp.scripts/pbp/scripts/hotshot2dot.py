@@ -5,7 +5,7 @@ from pbp.scripts.gprof2dot import run_script
 
 def main():
     if len(sys.argv) != 2:
-        print 'Usage: %s HOTSHOT_FILE' % sys.argv[0]
+        print('Usage: %s HOTSHOT_FILE' % sys.argv[0])
         sys.exit(0)
     filename = sys.argv[1]
     s = hotshot.stats.load(filename)

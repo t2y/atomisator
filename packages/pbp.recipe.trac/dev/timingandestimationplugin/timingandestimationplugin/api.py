@@ -1,20 +1,20 @@
 import re
-import dbhelper
+from . import dbhelper
 import time
-from tande_filters import * 
-from ticket_daemon import *
-from usermanual import *
+from .tande_filters import * 
+from .ticket_daemon import *
+from .usermanual import *
 from trac.log import logger_factory
 from trac.ticket import ITicketChangeListener, Ticket
 from trac.core import *
 from trac.env import IEnvironmentSetupParticipant
 from trac.perm import IPermissionRequestor, PermissionSystem
-from webui import * 
-from ticket_webui import *
-from query_webui import *
-from reportmanager import CustomReportManager
-from statuses import *
-from reports import all_reports
+from .webui import * 
+from .ticket_webui import *
+from .query_webui import *
+from .reportmanager import CustomReportManager
+from .statuses import *
+from .reports import all_reports
 from sets import Set
 
 ## report columns
@@ -80,7 +80,7 @@ class TimeTrackingSetupParticipant(Component):
 
         
         if self.db_installed_version < 1:
-            print "Creating bill_date table"
+            print("Creating bill_date table")
             sql = """
             CREATE TABLE bill_date (
             time integer,
@@ -91,7 +91,7 @@ class TimeTrackingSetupParticipant(Component):
             dbhelper.execute_non_query( sql)
 
             
-            print "Creating report_version table"
+            print("Creating report_version table")
             sql = """
             CREATE TABLE report_version (
             report integer,
@@ -102,7 +102,7 @@ class TimeTrackingSetupParticipant(Component):
             dbhelper.execute_non_query(sql)
 
         if self.db_installed_version < 4:
-            print "Upgrading report_version table to v4"
+            print("Upgrading report_version table to v4")
             sql ="""
             ALTER TABLE report_version ADD COLUMN tags varchar(1024) null;
             """
@@ -112,7 +112,7 @@ class TimeTrackingSetupParticipant(Component):
             # In this version we convert to using reportmanager.py
             # The easiest migration path is to remove all the reports!!
             # They will be added back in later but all custom reports will be lost (deleted)
-            print "Dropping report_version table"
+            print("Dropping report_version table")
             sql = "DELETE FROM report " \
                   "WHERE author=%s AND id IN (SELECT report FROM report_version)"
             dbhelper.execute_non_query(sql, 'Timing and Estimation Plugin')
@@ -134,7 +134,7 @@ class TimeTrackingSetupParticipant(Component):
         for report_group in all_reports:
             for report in report_group['reports']:
                 py_reports.add((report['uuid'], report['version']))
-        for key, report_group in db_report_hash.items():
+        for key, report_group in list(db_report_hash.items()):
             for report in report_group['reports']:
                 db_reports.add((report['uuid'], report['version']))
         #diff = db_reports.symmetric_difference(py_reports)
@@ -264,9 +264,9 @@ class TimeTrackingSetupParticipant(Component):
         performed the upgrades they need without an error being raised.
         """
         def p(s):
-            print s
+            print(s)
             return True
-        print "Timing and Estimation needs an upgrade"
+        print("Timing and Estimation needs an upgrade")
         p("Upgrading Database")
         self.do_db_upgrade()
         p("Upgrading reports")
@@ -284,7 +284,7 @@ class TimeTrackingSetupParticipant(Component):
         if self.needs_user_man():
             p("Upgrading usermanual")
             self.do_user_man_update()
-        print "Done Upgrading"
+        print("Done Upgrading")
 
     def have_statuses_changed(self):
         """get the statuses from the last time we saved them,

@@ -1,6 +1,6 @@
 import os
 from os.path import join
-from urllib import quote_plus
+from urllib.parse import quote_plus
 from urllib import FancyURLopener
 
 import simplejson
@@ -41,7 +41,7 @@ class Yahoo(object):
     def params(self, params):
         """ Takes a dictionary of key, value pairs and generates a cgi parameter/argument string """
         p = ""
-        for k, v in params.iteritems():
+        for k, v in params.items():
             p += "&%s=%s" % (quote_plus(k), quote_plus(v))
         return p
 

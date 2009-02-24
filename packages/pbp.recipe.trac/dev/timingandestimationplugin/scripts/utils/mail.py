@@ -26,14 +26,14 @@ def rawEmail(toList, msg, server=SERVER, fromEmail=FROMEMAIL):
 
     if smtpresult:
         errstr = ""
-        for recip in smtpresult.keys():
+        for recip in list(smtpresult.keys()):
             errstr = """Could not delivery mail to: %s
 
 Server said: %s
 %s
 
 %s""" % (recip, smtpresult[recip][0], smtpresult[recip][1], errstr)
-        raise smtplib.SMTPException, errstr
+        raise smtplib.SMTPException(errstr)
 
 
 def processTo(to):
@@ -148,7 +148,7 @@ def addFile(filePath, message, mimeType=None):
     
     
     fMsg = None
-    if messageMaker.has_key(maintype):
+    if maintype in messageMaker:
         fMsg = messageMaker[maintype](filePath, subtype)
     else:
         fp = open(filePath, 'rb')

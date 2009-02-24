@@ -19,29 +19,29 @@
 
 import unittest
 
-from guess_language import (createOrderedModel, find_runs, 
+from .guess_language import (createOrderedModel, find_runs, 
     guessLanguage, guessLanguageName, guessLanguageTag, guessLanguageId, guessLanguageInfo,
     normalize, UNKNOWN)
 
 class guess_language_test(unittest.TestCase):
     def test_normalize(self):
-        self.assertEquals('abc def ghi', normalize(u'abc4def   !@#!#@$   ghi'))
+        self.assertEquals('abc def ghi', normalize('abc4def   !@#!#@$   ghi'))
         
-        s = u"På denne side bringer vi billeder fra de mange forskellige forberedelser til arrangementet efterhånden som vi får dem "
+        s = "På denne side bringer vi billeder fra de mange forskellige forberedelser til arrangementet efterhånden som vi får dem "
         self.assertEquals(s, normalize(s))
         
     def test_find_runs(self):
-        self.assertEquals(['Basic Latin'], find_runs(u'This is a test of the language checker'))
-        self.assertEquals(set(['Basic Latin', 'Extended Latin']), set(find_runs(u'abcdééé')))
+        self.assertEquals(['Basic Latin'], find_runs('This is a test of the language checker'))
+        self.assertEquals(set(['Basic Latin', 'Extended Latin']), set(find_runs('abcdééé')))
         
-        s = u"Сайлау нәтижесінде дауыстардың басым бөлігін ел премьер министрі Виктор Янукович пен оның қарсыласы, оппозиция жетекшісі Виктор Ющенко алды."
+        s = "Сайлау нәтижесінде дауыстардың басым бөлігін ел премьер министрі Виктор Янукович пен оның қарсыласы, оппозиция жетекшісі Виктор Ющенко алды."
         self.assertEquals(['Cyrillic'], find_runs(s))
         
     
     def test_createOrderedModel(self):
-        self.assertEquals([u'abc'], createOrderedModel(u'abc'))
-        self.assertEquals(u'abc bca'.split(), createOrderedModel(u'abca'))
-        self.assertEquals([u'cab', u'abc', u'abd', u'bca', u'bdc', u'dca'], createOrderedModel(u'abcabdcab'))
+        self.assertEquals(['abc'], createOrderedModel('abc'))
+        self.assertEquals('abc bca'.split(), createOrderedModel('abca'))
+        self.assertEquals(['cab', 'abc', 'abd', 'bca', 'bdc', 'dca'], createOrderedModel('abcabdcab'))
         
         
     def test_guess(self):

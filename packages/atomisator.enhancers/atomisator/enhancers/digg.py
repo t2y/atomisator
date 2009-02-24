@@ -1,16 +1,4 @@
-#  PyDigg
-#
-#  Python toolkit for the Digg.com API
-#  http://neothoughts.com/pydigg
-#
-#  Author: Derek van Vliet <derek@neothoughts.com>
-#  Copyright: Copyright (c) 2007 Derek van Vliet
-#  License: MIT <http://www.opensource.org/licenses/mit-license.php>
-#
-#  Documentation: http://neothoughts.com/pydigg
-#  Digg API Documentation: http://apidoc.digg.com
-
-from urllib import urlencode, urlopen
+from urllib.parse import urlencode
 from xml.dom import minidom
 
 class Bag: pass
@@ -1037,7 +1025,7 @@ class Digg(object):
              endpoint,
              **params):
         args = {}
-        for (key, value) in params.items():
+        for (key, value) in list(params.items()):
             if len(value) > 0:
                 args[key] = value
                 
@@ -1055,7 +1043,7 @@ class Digg(object):
                    element):
         bag = Bag()
         if isinstance(element, minidom.Element):
-            for key in element.attributes.keys():
+            for key in list(element.attributes.keys()):
                 setattr(bag, key, element.attributes[key].value)
                 
         childElements = [e for e in element.childNodes \
@@ -1064,7 +1052,7 @@ class Digg(object):
             for child in childElements:
                 key = child.tagName
                 if hasattr(bag, key):
-                    if type(getattr(bag, key)) <> type([]):
+                    if type(getattr(bag, key)) != type([]):
                         setattr(bag, key, [getattr(bag, key)])
                     setattr(bag, key, getattr(bag, key) + [self._unmarshal(child)])
                 elif isinstance(child, minidom.Element) and \

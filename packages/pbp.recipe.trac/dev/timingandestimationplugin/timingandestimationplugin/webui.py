@@ -2,9 +2,9 @@ from pkg_resources import resource_filename
 import re
 import time
 import datetime
-import dbhelper
+from . import dbhelper
 from sets import Set
-from usermanual import * 
+from .usermanual import * 
 from trac.log import logger_factory
 from trac.core import *
 from trac.web import IRequestHandler
@@ -12,8 +12,8 @@ from trac.util import Markup
 from trac.web.chrome import add_stylesheet, add_script, \
      INavigationContributor, ITemplateProvider
 from trac.web.href import Href
-from reportmanager import CustomReportManager
-from statuses import get_statuses
+from .reportmanager import CustomReportManager
+from .statuses import get_statuses
 
 #get_statuses = api.get_statuses
 
@@ -82,7 +82,7 @@ class TimingEstimationAndBillingPage(Component):
             messages.extend([s]);
 
         if req.method == 'POST':
-            if req.args.has_key('setbillingtime'):
+            if 'setbillingtime' in req.args:
                 self.set_bill_date(req.authname)
                 addMessage("All tickets last bill date updated")
 

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # (C) Copyright 2008 Tarek Ziadé <tarek@ziade.org>
 #
-import urllib2
+import urllib.request, urllib.error
 from atomisator.filters.followers import RedditFollower, DeliciousFollower
 from nose.tools import *
 
@@ -52,13 +52,13 @@ class Url:
         return self._data
 
 def setupurl():
-    urllib2.old = urllib2.urlopen
+    urllib2.old = urllib.request.urlopen
     def open(*args):
         return Url(DATA)
-    urllib2.urlopen = open
+    urllib.request.urlopen = open
 
 def teardownurl():
-    urllib2.urlopen = urllib2.old
+    urllib.request.urlopen = urllib2.old
     del urllib2.old
 
 @with_setup(setupurl, teardownurl)
@@ -71,7 +71,7 @@ def test_reddit():
                'n_subreddit_now_skinned_as_pythonorg/">[22 comments]</a>')
 
     e = {'summary': summary,
-         'title': (u'é HTTPRedirectHandler and HTTPDigestAuthHandler' 
+         'title': ('é HTTPRedirectHandler and HTTPDigestAuthHandler' 
                    ' (and more)')}
     entry = red(e, [])
     assert 'HTTPRedirectHandler' in entry['summary']
@@ -84,7 +84,7 @@ def test_delicious():
     
     e = {'comments': 
             'http://delicious.com/url/45bb751bb4dd1f4a291c91cf31c43511',
-         'title': (u'é HTTPRedirectHandler and HTTPDigestAuthHandler' 
+         'title': ('é HTTPRedirectHandler and HTTPDigestAuthHandler' 
                    ' (and more)'),
          'link': 'http://link'}
     entry = delicious(e, [])

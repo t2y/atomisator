@@ -1,1 +1,1 @@
-from navadd import *
+from .navadd import *

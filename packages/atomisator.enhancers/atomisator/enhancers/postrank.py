@@ -1,8 +1,8 @@
 # taken from http://github.com/aiderss/python-postrank/tree/master
 #
-from urllib import urlencode
+from urllib.parse import urlencode
 
-import httplib
+import http.client
 
 DEFAULT_VER = "v1"
 POSTRANK_URL = "api.postrank.com"
@@ -46,18 +46,18 @@ class PostRank(object):
             postrank_urls = []
             postrankfeed_ids = []
             # get post args
-            if kwargs.has_key('url'):
+            if 'url' in kwargs:
                 for url in kwargs.pop('url'):
                     postrank_urls.append(url)
-            if kwargs.has_key('feed_id'):
+            if 'feed_id' in kwargs:
                 for feed_id in kwargs.pop('feed_id'):
                     postrankfeed_ids.append(feed_id)
         
         if kwargs:
             # build api args
-            args = urlencode(kwargs.items())    
+            args = urlencode(list(kwargs.items()))    
 
-        c = httplib.HTTPConnection(POSTRANK_URL)
+        c = http.client.HTTPConnection(POSTRANK_URL)
         uri = "/%s/%s?%s" %(self.version, resource,args)
 
         try:

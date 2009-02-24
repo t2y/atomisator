@@ -4,7 +4,7 @@ import os
 from os.path import join
 import sys
 import subprocess
-import ConfigParser
+import configparser
 import shutil
 
 import pkg_resources
@@ -86,7 +86,7 @@ class Recipe(object):
             trac._do_component_add(comp, owner)
         
         trac_ini = join(location, 'conf', 'trac.ini')
-        parser = ConfigParser.ConfigParser()
+        parser = configparser.ConfigParser()
         parser.read([trac_ini])
         if 'components' not in parser.sections():
             parser.add_section('components')

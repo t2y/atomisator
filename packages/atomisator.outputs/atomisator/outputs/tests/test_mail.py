@@ -60,7 +60,7 @@ def test_email():
 
     entry = Entry()
     entry.link = 'http://here'
-    entry.title = u'this is é'
+    entry.title = 'this is é'
 
     args = (mail_config,)
     entries = [entry]

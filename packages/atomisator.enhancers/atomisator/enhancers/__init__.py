@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 # (C) Copyright 2008 Tarek Ziadé <tarek@ziade.org>
 #
-import digg
+from . import digg
 import BeautifulSoup
 import re
 import socket
-import urlparse
+import urllib.parse
 
 from atomisator.enhancers.postrank import PostRank
 
@@ -123,14 +123,14 @@ class RelatedEntries(object):
         """return links found in the page"""
         
         try:
-            page = urllib2.urlopen(link)
-            if 'content-type' in page.headers.keys():
+            page = urllib.request.urlopen(link)
+            if 'content-type' in list(page.headers.keys()):
                 content_type = page.headers['content-type'].split(';')
                 type_ = content_type[0].strip().lower()
                 if type_ not in ('text/html', 'text/plain', 'test/rst'):
                     return []
             url_content = page.read()
-        except urllib2.HTTPError:
+        except urllib.error.HTTPError:
             return []
 
         return self._get_content_link(content)
@@ -215,7 +215,7 @@ class PostRanked(object):
         
         if feed_id[1] is None and entry.root_link is not None:
             # trying with the root url
-            root = urlparse.urlparse(entry.root_link)
+            root = urllib.parse.urlparse(entry.root_link)
             root = '%s://%s' % (root[0], root[1])
             feed_id = self._post_rank('feed_id', appkey=appkey, format='json',
                                       url=root)

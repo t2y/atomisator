@@ -12,7 +12,7 @@ def get_all(sql, *params):
         data = list(cur.fetchall())
         desc = cur.description
         db.commit();
-    except Exception, e:
+    except Exception as e:
         mylog.error('There was a problem executing sql:%s \n \
 with parameters:%s\nException:%s'%(sql, params, e));
         db.rollback();
@@ -30,7 +30,7 @@ def execute_non_query( sql, *params):
     try:
         cur.execute(sql, params)
         db.commit()
-    except Exception, e:
+    except Exception as e:
         mylog.error('There was a problem executing sql:%s \n \
 with parameters:%s\nException:%s'%(sql, params, e));
         db.rollback();
@@ -48,7 +48,7 @@ def get_first_row( sql,*params):
         cur.execute(sql, params)
         data = cur.fetchone();
         db.commit();
-    except Exception, e:
+    except Exception as e:
         mylog.error('There was a problem executing sql:%s \n \
         with parameters:%s\nException:%s'%(sql, params, e));
         db.rollback()
@@ -74,7 +74,7 @@ def execute_in_trans(*args):
         for sql, params in args:
             cur.execute(sql, params)
         db.commit()
-    except Exception, e:
+    except Exception as e:
         mylog.error('There was a problem executing sql:%s \n \
         with parameters:%s\nException:%s'%(sql, params, e));
         db.rollback();
@@ -93,7 +93,7 @@ def db_table_exists( table):
     try:
         cur.execute(sql)
         db.commit()
-    except Exception, e:
+    except Exception as e:
         has_table = False
         db.rollback()
         
@@ -129,7 +129,8 @@ def get_result_set(sql, *params):
 
 class ResultSet:
     """ the result of calling getResultSet """
-    def __init__ (self, (columnDescription, rows)):
+    def __init__ (self, xxx_todo_changeme):
+        (columnDescription, rows) = xxx_todo_changeme
         self.columnDescription, self.rows = columnDescription, rows 
         self.columnMap = self.get_column_map()
 
@@ -154,16 +155,16 @@ class ResultSet:
             elif(trow == int):
                 return self.rows[row][self.columnMap[col]]
             else:
-                print ("rs.value Type Failed col:%s  row:%s" % (type(col), type(row)))
+                print(("rs.value Type Failed col:%s  row:%s" % (type(col), type(row))))
         elif tcol == int:
             if(trow == list or trow == tuple):
                 return row[col]
             elif(trow == int):
                 return self.rows[row][col]
             else:
-                print ("rs.value Type Failed col:%s  row:%s" % (type(col), type(row)))
+                print(("rs.value Type Failed col:%s  row:%s" % (type(col), type(row))))
         else:
-            print ("rs.value Type Failed col:%s  row:%s" % (type(col), type(row)))
+            print(("rs.value Type Failed col:%s  row:%s" % (type(col), type(row))))
    
     def json_out(self):
         json = "[%s]" % ',\r\n'. join(
@@ -174,7 +175,7 @@ class ResultSet:
               replace('"','\\"').
               replace('\r','\\r').
               replace('\n','\\n'))
-             for (key, val) in self.columnMap.items()]))
+             for (key, val) in list(self.columnMap.items())]))
              for row in self.rows])
         #mylog.debug('serializing to json : %s'% json)
         return json

@@ -15,7 +15,7 @@ class Parser(object):
     """
 
     def _filter_entry(self, entry):
-        keys = entry.keys()
+        keys = list(entry.keys())
         for field in ('date_parsed', 'updated_parsed', 'published_parsed'):
             if field in keys:
                 del entry[field]
@@ -37,7 +37,7 @@ class Parser(object):
             if 'content' in entry:
                 entry['summary'] = entry['content'][0]['value']
         if self.name is not None:
-            entry['title'] = u'[%s] %s' % (self.name, entry['title'])
+            entry['title'] = '[%s] %s' % (self.name, entry['title'])
 
         entry['root_link'] = self.url
         return entry
@@ -51,9 +51,9 @@ class Parser(object):
         else:
             try:
                 size = int(args[0])
-                self.name = u' '.join(args[1:])
+                self.name = ' '.join(args[1:])
             except ValueError:
-                self.name = u' '.join(args)
+                self.name = ' '.join(args)
                 size = -1
         result = feedparse(url)
        

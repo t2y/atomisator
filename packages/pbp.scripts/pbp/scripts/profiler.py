@@ -16,8 +16,8 @@ def reset_stats():
 
 def print_stats():
     template = '%s : %.2f kstones, %.3f secondes, %.3d bytes'
-    for key, v in stats.items():
-        print template % (key, v['stones'], v['time'], v['memory'])
+    for key, v in list(stats.items()):
+        print(template % (key, v['stones'], v['time'], v['memory']))
 
 if sys.platform == 'win32':
     timer = time.clock

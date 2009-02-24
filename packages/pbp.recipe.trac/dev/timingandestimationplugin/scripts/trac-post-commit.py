@@ -164,7 +164,7 @@ _supported_cmds = {'close':      '_cmdClose',
 ticket_prefix = '(?:#|(?:ticket|issue|bug)[: ]?)'
 time_pattern = r'[ ]?(?:\((?:(?:spent|sp)[ ]?)?(-?[0-9]*(?:\.[0-9]+)?)\))?'
 ticket_reference = ticket_prefix + '[0-9]+'+time_pattern
-support_cmds_pattern = '|'.join(_supported_cmds.keys())
+support_cmds_pattern = '|'.join(list(_supported_cmds.keys()))
 ticket_command =  (r'(?P<action>(?:%s))[ ]*'
                    '(?P<ticket>%s(?:(?:[, &]*|[ ]?and[ ]?)%s)*)' %
                    (support_cmds_pattern,ticket_reference, ticket_reference))
@@ -215,7 +215,7 @@ class CommitHook:
                     lst.append([func, spent])
                     
 
-        for tkt_id, vals in tickets.iteritems():
+        for tkt_id, vals in tickets.items():
             log ("tkt_id:%s, vals%s ", tkt_id, vals)
             spent_total = 0.0
             try:
@@ -240,13 +240,13 @@ class CommitHook:
 
                 tn = TicketNotifyEmail(self.env)
                 tn.notify(ticket, newticket=0, modtime=self.now)
-            except Exception, e:
+            except Exception as e:
                 # import traceback
                 # traceback.print_exc(file=sys.stderr)
                 log('Unexpected error while processing ticket ' \
                                    'ID %s: %s' % (tkt_id, e))
-                print>>sys.stderr, 'Unexpected error while processing ticket ' \
-                                   'ID %s: %s' % (tkt_id, e)
+                print('Unexpected error while processing ticket ' \
+                                   'ID %s: %s' % (tkt_id, e), file=sys.stderr)
             
 
     def _cmdClose(self, ticket):
@@ -260,15 +260,15 @@ class CommitHook:
         log ("Setting ticket:%s spent: %s", ticket, spent)
         if (spent != ''):
             spentTime = float(spent)
-            if (ticket.values.has_key('hours')):
+            if ('hours' in ticket.values):
                 ticket['hours'] = str(spentTime)
                 
 
 if __name__ == "__main__":
     if len(sys.argv) < 5:
-        print "For usage: %s --help" % (sys.argv[0])
-        print
-        print "Note that the deprecated options will be removed in Trac 0.12."
+        print("For usage: %s --help" % (sys.argv[0]))
+        print()
+        print("Note that the deprecated options will be removed in Trac 0.12.")
     else:
         CommitHook()
 

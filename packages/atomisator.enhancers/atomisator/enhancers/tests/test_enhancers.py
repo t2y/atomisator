@@ -12,7 +12,7 @@ from nose.tools import *
 
 def setup():
     class Story:
-        id = u'9878756'
+        id = '9878756'
 
     def one(*args, **kw):
         return [Story()]
@@ -48,14 +48,14 @@ def test_digg():
 def test_related():
    
     class E:
-        title = id = u'1'
+        title = id = '1'
         summary = 'my summary'
         tags = ['one', 'two']
         links = ['http://link/one']
         link = 'http://example.com/one'
 
     class E2:
-        title = id = u'2'
+        title = id = '2'
         summary = 'other summary'
         tags = ['two', 'three']
         link = 'http://example.com/two'
@@ -67,12 +67,12 @@ def test_related():
     r.prepare(entries)
     
     wanted = ['one', 'three', 'two']
-    have = r._tags.keys()
+    have = list(r._tags.keys())
     have.sort()
     assert_equals(wanted, have)
-    assert_equals([e.id for e in r._tags['two']], [u'1', u'2'])
-    assert_equals([e.id for e in r._tags['three']], [u'2'])
-    assert_equals([e.id for e in r._tags['one']], [u'1'])
+    assert_equals([e.id for e in r._tags['two']], ['1', '2'])
+    assert_equals([e.id for e in r._tags['three']], ['2'])
+    assert_equals([e.id for e in r._tags['one']], ['1'])
 
     entry = r(entry)
  
@@ -86,14 +86,14 @@ def test_related_link():
     sample2 = os.path.join(dirname, 'sample2.html')
 
     class E:
-        title = id = u'1'
+        title = id = '1'
         summary = open(sample1).read().decode('utf8') 
         tags = []
         links = []
         link = 'http://example.com/one'
 
     class E2:
-        title = id = u'2'
+        title = id = '2'
         summary = open(sample2).read().decode('utf8')
         tags = ['two', 'three']
         link = 'http://example.com/two'
@@ -106,10 +106,10 @@ def test_related_link():
     entries = [e1, e2]       
     r.prepare(entries) 
     links = r._get_content_link(E.summary)
-    assert u'http://www.python.org' in links
+    assert 'http://www.python.org' in links
     assert_equals(len(links), 21)
 
-    assert_equals(r._links[u'http://www.python.org'], [e1, e2])
+    assert_equals(r._links['http://www.python.org'], [e1, e2])
     entry = r(entry)
     assert '<strong>Related</strong>' in entry.summary
 

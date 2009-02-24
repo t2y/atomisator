@@ -52,7 +52,7 @@ class TimeTrackingTicketObserver(Component):
 
     def watch_hours(self, ticket):
         def readTicketValue(name, tipe, default=0):
-            if ticket.values.has_key(name):        
+            if name in ticket.values:        
                 return tipe(ticket.values[name] or default)
             else:
                 cursor = self.env.get_db_cnx().cursor()

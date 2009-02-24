@@ -51,7 +51,7 @@ class Recipe(object):
         env_section = options.get('environment', '').strip()
         if env_section:
             env = self.buildout[env_section]
-            for key, value in env.items():
+            for key, value in list(env.items()):
                 initialization += env_template % (key, value)
 
         initialization_section = options.get('initialization', '').strip()

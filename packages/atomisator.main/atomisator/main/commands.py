@@ -73,26 +73,26 @@ def _parse_options():
 
 def list_readers():
     """List out readers plugins."""
-    for reader_name, reader in READERS.items():
-        print reader_name
+    for reader_name, reader in list(READERS.items()):
+        print(reader_name)
         doc = reader.__doc__
         if doc is not None:
-            print doc
+            print(doc)
 
 def list_outputs():
     """List out output plugins."""
-    for output_name, output in OUTPUTS.items():
-        print '%s: %s' % (output_name, output.__doc__)
+    for output_name, output in list(OUTPUTS.items()):
+        print('%s: %s' % (output_name, output.__doc__))
            
 def list_filters():
     """List out filter plugins."""
-    for filter_name, filter_ in FILTERS.items():
-        print '%s: %s' % (filter_name, filter_.__doc__)
+    for filter_name, filter_ in list(FILTERS.items()):
+        print('%s: %s' % (filter_name, filter_.__doc__))
 
 def list_enhancers():
     """List out enhancers plugins."""
-    for enhancer_name, enhancer in ENHANCERS.items():
-        print '%s: %s' % (enhancer_name, enhancer.__doc__)
+    for enhancer_name, enhancer in list(ENHANCERS.items()):
+        print('%s: %s' % (enhancer_name, enhancer.__doc__))
 
 def atomisator():
     """Main function."""

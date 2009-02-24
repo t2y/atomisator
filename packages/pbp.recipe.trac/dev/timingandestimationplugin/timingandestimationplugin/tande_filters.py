@@ -14,7 +14,7 @@ class RowFilter(object):
         try:
             cur.execute("SELECT id FROM custom_report")
             self.billing_reports = set([x[0] for x in cur.fetchall()])
-        except Exception, e:
+        except Exception as e:
             # if we can't get the billing reports (e.g. the
             # TimingAndEstimationPlugin isn't installed), silently continue
             # without hiding anything.

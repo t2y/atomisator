@@ -1,4 +1,4 @@
-from urllib2 import urlopen
+from urllib.request import urlopen
 import re
 
 options = re.M |re.S|re.I|re.U

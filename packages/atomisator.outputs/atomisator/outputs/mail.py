@@ -6,16 +6,16 @@ Mail output plugin.
 from email.MIMEText import MIMEText
 from smtplib import SMTP
 from datetime import datetime
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 import logging
 
-DEFAULT_BODY_TMPL = u"""\
+DEFAULT_BODY_TMPL = """\
 Atomisator has triggered an alert. Check out for:
 
 %(entries)s
 """
 
-DEFAULT_ENTRY_TMPL = u"""\
+DEFAULT_ENTRY_TMPL = """\
   * %(title)s: %(link)s
 """
 
@@ -84,7 +84,7 @@ class Mail(object):
 
         # mail content
         text = values['body_template'] % \
-                {'entries': u'\n'.join(lines)}
+                {'entries': '\n'.join(lines)}
 
         # stored in utf8 by default
         text = text.encode('utf8', 'ignore')

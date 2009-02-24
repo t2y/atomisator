@@ -109,7 +109,7 @@ class MercurialConnector(Component):
                 self.ui = trac_ui(self.log, parentui=self.ui)
                 self.ui.check_trusted = False
                 self.ui.readconfig(hgrc_path)
-            except IOError, e:
+            except IOError as e:
                 self.log.warn("[hg] hgrc file (%s) can't be read: %s", 
                               hgrc_path, e)
 
@@ -165,7 +165,7 @@ class MercurialConnector(Component):
             return tag.a(label, class_="changeset",
                          title=shorten_line(chgset.message),
                          href=formatter.href.changeset(rev))
-        except NoSuchChangeset, e:
+        except NoSuchChangeset as e:
             return tag.a(label, class_="missing changeset",
                          title=to_unicode(e), rel="nofollow",
                          href=formatter.href.changeset(rev))
@@ -210,7 +210,7 @@ class MercurialRepository(Repository):
     def __init__(self, path, log, ui, options):
         self.ui = ui
         # TODO: per repository ui and options?
-        if isinstance(path, unicode):
+        if isinstance(path, str):
             str_path = path.encode('utf-8')
             if not os.path.exists(str_path):
                 str_path = path.encode('latin-1')
@@ -218,7 +218,7 @@ class MercurialRepository(Repository):
         try:
             self.repo = hg.repository(ui=ui, path=path)
             self.path = self.repo.root
-        except RepoError, e:
+        except RepoError as e:
             self.path = None
         self._show_rev = True
         if 'show_rev' in options and not options['show_rev'] in TRUE:
@@ -283,7 +283,7 @@ class MercurialRepository(Repository):
         """Return the revision number for the specified rev, in compact form.
         """
         if rev is not None:
-            if isinstance(rev, basestring) and rev.isdigit():
+            if isinstance(rev, str) and rev.isdigit():
                 rev = int(rev)
             if 0 <= rev < self.repo.changelog.count():
                 return rev # it was already a short rev
@@ -293,8 +293,8 @@ class MercurialRepository(Repository):
         # branches
         if hasattr(self.repo, 'branchtags'):
             # New 0.9.2 style branches, since [hg 028fff46a4ac]
-            for t, n in sorted(self.repo.branchtags().items(), reverse=True,
-                               key=lambda (t, n): self.repo.changelog.rev(n)):
+            for t, n in sorted(list(self.repo.branchtags().items()), reverse=True,
+                               key=lambda t_n: self.repo.changelog.rev(t_n[1])):
                 yield ('branches', t, '/', self.hg_display(n))
         else:
             # Old style branches
@@ -315,7 +315,7 @@ class MercurialRepository(Repository):
                 pass
 
     def get_changeset(self, rev):
-        return MercurialChangeset(self, self.hg_node(unicode(rev)))
+        return MercurialChangeset(self, self.hg_node(str(rev)))
 
     def get_changesets(self, start, stop):
         """Follow each head and parents in order to get all changesets
@@ -497,7 +497,7 @@ class MercurialNode(Node):
                 mflags = repos.repo.manifest.readflags(manifest_n)
         self.manifest = manifest
         self.mflags = mflags
-        if isinstance(path, unicode):
+        if isinstance(path, str):
             try:
                 self._init_path(log, path.encode('utf-8'))
             except NoSuchNode:
@@ -518,7 +518,7 @@ class MercurialNode(Node):
             dir = path and path+'/' or ''
             entries = {}
             newest = -1
-            for file in self.manifest.keys():
+            for file in list(self.manifest.keys()):
                 if file.startswith(dir):
                     entry = file[len(dir):].split('/', 1)[0]
                     entries[entry] = 1
@@ -528,7 +528,7 @@ class MercurialNode(Node):
                         newest = max(log_rev, newest)
             if entries:
                 kind = Node.DIRECTORY
-                self.entries = entries.keys()
+                self.entries = list(entries.keys())
                 if newest >= 0:
                     node = log.node(newest)
                 else: # ... as it's the youngest anyway
@@ -586,7 +586,7 @@ class MercurialNode(Node):
         # directory history
         if self.isdir:
             if not self.path: # special case for the root
-                for r in xrange(log.rev(self.n), -1, -1):
+                for r in range(log.rev(self.n), -1, -1):
                     yield ('', self.repos.hg_display(log.node(r)),
                            r and Changeset.EDIT or Changeset.ADD)
                 return
@@ -601,7 +601,7 @@ class MercurialNode(Node):
             return
         # file history
         # FIXME: COPY currently unsupported        
-        for file_rev in xrange(self.file.rev(self.file_n), -1, -1):
+        for file_rev in range(self.file.rev(self.file_n), -1, -1):
             rev = log.node(self.file.linkrev(self.file.node(file_rev)))
             older = (self.path, self.repos.hg_display(rev), Changeset.ADD)
             if newer:
@@ -698,7 +698,7 @@ class MercurialChangeset(Changeset):
                 yield ('Children', changeset_links(self.children), True, 'changeset')
             if len(self.tags):
                 yield ('Tags', changeset_links(self.tags), True, 'changeset')
-            for k, v in self.extra.iteritems():
+            for k, v in self.extra.items():
                 yield (k, v, False, 'message')
 
     def get_changes(self):
@@ -716,7 +716,7 @@ class MercurialChangeset(Changeset):
 
         deletions = {}
         def detect_delete(pmanifest, p):
-            for f in pmanifest.keys():
+            for f in list(pmanifest.keys()):
                 if f not in manifest:
                     deletions[f] = p
         if manifest1:
@@ -755,7 +755,7 @@ class MercurialChangeset(Changeset):
                     base_rev = None
                 changes.append((f, Node.FILE, action, base_path, base_rev))
 
-        for f, p in deletions.items():
+        for f, p in list(deletions.items()):
             if f not in renames:
                 changes.append((f, Node.FILE, Changeset.DELETE, f, p))
         changes.sort()

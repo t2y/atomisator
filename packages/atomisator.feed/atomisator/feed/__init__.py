@@ -2,7 +2,7 @@ from Cheetah.Template import Template
 import Cheetah.Filters
 
 import os
-from cStringIO import StringIO
+from io import StringIO
 
 tmpl = os.path.join(os.path.dirname(__file__), 'rss2.tmpl')
 
@@ -19,11 +19,11 @@ class Generator(object):
 
         class Encode(Cheetah.Filters.Filter):
             def filter(self, val, **kw):
-                if kw.has_key('encoding'):
+                if 'encoding' in kw:
                     encoding = kw['encoding']
                 else:
                     encoding = 'utf8'
-                if isinstance(val, unicode):
+                if isinstance(val, str):
                     val = val.encode(encoding)
                 else:
                     val = str(val)

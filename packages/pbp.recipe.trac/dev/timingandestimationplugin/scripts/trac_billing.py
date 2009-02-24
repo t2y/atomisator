@@ -26,14 +26,14 @@ def progn(*params):
     return params[-1]
 
 def prinTrue(s):
-    print s
+    print(s)
     return True
 
 
 def wn (name, attribs, *children):
     return "<%s %s>\n%s\n</%s>\n" % \
            (name, \
-            ' '.join(['%s="%s"' % (key, val) for (key, val) in attribs.items()]), \
+            ' '.join(['%s="%s"' % (key, val) for (key, val) in list(attribs.items())]), \
             '\n'.join([str(c) for c in children]), \
             name)
 
@@ -118,9 +118,9 @@ def save_output_to_file(output, when=0):
                       str(when.month), str(when.day),
                       str(when.hour), str(when.minute), ".html"])
     p = "/".join([_htmlLocation, fname])
-    print "----"
-    print "Writing out billing information to '%s'" % p
-    print "----"
+    print("----")
+    print("Writing out billing information to '%s'" % p)
+    print("----")
     f = open(p, "w")
     f.write(output)
     f.close();
@@ -132,10 +132,10 @@ def run_billing(emails="ryan@acceleration.net", when=0):
         when = dt.now()
     date = '/'.join([str(when.month), str(when.day), str(when.year)])
     
-    print "Collecting output..."
+    print("Collecting output...")
     output = make_all_projects_output()
     save_output_to_file(output, when)
-    print "Emailing results to %s" % emails
+    print("Emailing results to %s" % emails)
     if emails:
         mail.mail(emails, 'Trac Billing - %s ' % date, output, html=True, fromEmail='trac-tickets@acceleration.net')
     return output
@@ -155,16 +155,16 @@ def add_bill_date(project, username="Timing and Estimation Plugin",  when=0):
     db.executeNonQuery(project, sql, when, now, when)
 
 def mark_billing_date_in_all_projects(when=0 ):
-    print "Marking the bill date on all projects."
+    print("Marking the bill date on all projects.")
     if not when:
         when = time.time()
     for project in db.projects:
         try:
             add_bill_date(project,  "Timing and Estimation Plugin",  when);
-            print "%s Succeeded." % project
-        except Exception, e:
-            print "* %s failed: %s" % (project , e.args)
-    print "Done marking bill dates"
+            print("%s Succeeded." % project)
+        except Exception as e:
+            print("* %s failed: %s" % (project , e.args))
+    print("Done marking bill dates")
     
 
 
